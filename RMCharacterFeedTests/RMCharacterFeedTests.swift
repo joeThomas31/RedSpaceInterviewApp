@@ -4,7 +4,7 @@
 //
 //  Created by Joe Thomas on 2022-11-16.
 //
-
+@testable import RMCharacterFeed
 import XCTest
 
 final class RMCharacterFeedTests: XCTestCase {
@@ -28,6 +28,14 @@ final class RMCharacterFeedTests: XCTestCase {
         XCTAssertEqual(client.requestedURLs, [url, url])
     }
     
+    func test_load_deliversConnectivityErrorOnClientError() {
+        let (sut, client) = makeSUT()
+
+        expect(sut, toCompleteWith: .failure(.connectivity), when: {
+            let clientError = NSError(domain: "Test", code: 0)
+            client.complete(with: clientError)
+        })
+    }
     
     
     // MARK: - Helpers
@@ -36,6 +44,29 @@ final class RMCharacterFeedTests: XCTestCase {
         let sut = RemoteFeedLoader(url: url, client: client)
         return (sut, client)
     }
+    
+    func expect(_ sut: RemoteFeedLoader, toCompleteWith expectedResult: Result<[RMResult], RemoteFeedLoader.Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        let exp = expectation(description: "Wait for load completion")
+
+        sut.load { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.success(receivedItems), .success(expectedItems)):
+                XCTAssertEqual(receivedItems as! [RMResult], expectedItems, file: file, line: line)
+
+            case let (.failure(receivedError), .failure(expectedError)):
+                XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+
+            default:
+                XCTFail("Expected result \(expectedResult) got \(receivedResult) instead", file: file, line: line)
+            }
+
+            exp.fulfill()
+        }
+
+        action()
+
+        waitForExpectations(timeout: 0.1)
+    }
 
 
 }
@@ -43,20 +74,56 @@ final class RMCharacterFeedTests: XCTestCase {
 // Development seen below
 class RemoteFeedLoader
 {
+    
+    public enum Error: Swift.Error {
+        case connectivity
+        case invalidData
+    }
+    
     private let url: URL
     var client: HTTPClientSpy = HTTPClientSpy()
+    
     init(url: URL, client: HTTPClientSpy) {
         self.url = url
         self.client = client
     }
     
-    func load(completion:(Result<Any, Error>)->Void) {
-        client.requestedURLs.append(url)
+    func load(completion: @escaping (Result<Any, Error>)->Void) {
+        client.get(from: url) { [weak self] result in
+            guard self != nil else {
+                return
+            }
+            completion(.failure(.connectivity))
+        }
     }
     
     
 }
 
-class HTTPClientSpy {
-    var requestedURLs: [URL] = []
+public protocol HTTPClient {
+    typealias Result = Swift.Result<(Data, HTTPURLResponse), Error>
+
+    func get(from url: URL, completion: @escaping (Result) -> Void)
+}
+
+class HTTPClientSpy: HTTPClient {
+   
+    
+    private var messages = [(url: URL, completion: (HTTPClient.Result) -> Void)]()
+
+    var requestedURLs: [URL] {
+        return messages.map { $0.url }
+    }
+    
+    func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
+        messages.append((url, completion))
+    }
+    
+    func complete(with error: Error, at index: Int = 0, file: StaticString = #filePath, line: UInt = #line) {
+        guard messages.count > index else {
+            return XCTFail("Can't complete request never made", file: file, line: line)
+        }
+
+        messages[index].completion(.failure(error))
+    }
 }
