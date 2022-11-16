@@ -33,11 +33,11 @@ class RMCharacterListViewController: UIViewController {
         initView()
         initViewModel()
         showActivityIndicatory()
-        searchController.searchResultsUpdater = self
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Search Characters"
-        searchController.searchBar.backgroundColor = .white
-        navigationItem.searchController = searchController
+        makeSearchField()
+        customiseNavigationControl()
+    }
+    
+    fileprivate func customiseNavigationControl() {
         if #available(iOS 13.0, *) {
             navigationController?.navigationBar.standardAppearance.titleTextAttributes = [.foregroundColor: UIColor.blue]
         } else {
@@ -46,6 +46,16 @@ class RMCharacterListViewController: UIViewController {
         navigationController?.navigationBar.backgroundColor = .white
         definesPresentationContext = true
     }
+    
+    fileprivate func makeSearchField() {
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search Characters"
+        searchController.searchBar.backgroundColor = .white
+        navigationItem.searchController = searchController
+    }
+    
+   
     
     func showActivityIndicatory() {
         activityView.center = self.view.center

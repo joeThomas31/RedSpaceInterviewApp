@@ -63,6 +63,7 @@ class RMCharctersListViewModel: NSObject {
         let name = rmCharacter.name
         let image = rmCharacter.image
         var imagePhoto = UIImage(systemName: "person.and.background.dotted")!
+        
         if let data = try? Data(contentsOf: URL(string: image )!) {
             if let image = UIImage(data: data) {
                  imagePhoto = image
