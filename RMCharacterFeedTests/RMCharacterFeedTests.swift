@@ -50,6 +50,15 @@ final class RMCharacterFeedTests: XCTestCase {
         }
     }
     
+    func test_load_deliversInvalidDataErrorOn200HTTPResponseWithInvalidJSON() {
+        let (sut, client) = makeSUT()
+
+        expect(sut, toCompleteWith: .failure(.invalidData), when: {
+            let invalidJSON = Data("invalid json".utf8)
+            client.complete(withStatusCode: 200, data: invalidJSON)
+        })
+    }
+    
     
     
     // MARK: - Helpers
@@ -113,8 +122,8 @@ class RemoteFeedLoader
                 return
             }
             switch result {
-            case let .success((data, response)):
-                if 2 == 3 {
+            case let .success((x, _)):
+                if x == nil {
                     print("To Do")
                 } else {
                     completion(Result.failure(Error.invalidData))
