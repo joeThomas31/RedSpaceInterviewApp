@@ -23,7 +23,6 @@
 		2CEAE06F292167AB00E0EDD3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CEAE06D292167AB00E0EDD3 /* LaunchScreen.storyboard */; };
 		2CEAE0A92921B2DD00E0EDD3 /* RMCharacterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEAE0A82921B2DD00E0EDD3 /* RMCharacterService.swift */; };
 		2CEAE0AD2921B38200E0EDD3 /* RMCharacters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEAE0AC2921B38200E0EDD3 /* RMCharacters.swift */; };
-		2CEAE0B72921B96D00E0EDD3 /* RMResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEAE0B62921B96D00E0EDD3 /* RMResult.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,7 +55,6 @@
 		2CEAE070292167AB00E0EDD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CEAE0A82921B2DD00E0EDD3 /* RMCharacterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMCharacterService.swift; sourceTree = "<group>"; };
 		2CEAE0AC2921B38200E0EDD3 /* RMCharacters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMCharacters.swift; sourceTree = "<group>"; };
-		2CEAE0B62921B96D00E0EDD3 /* RMResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMResult.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,7 +176,6 @@
 			isa = PBXGroup;
 			children = (
 				2CEAE0AC2921B38200E0EDD3 /* RMCharacters.swift */,
-				2CEAE0B62921B96D00E0EDD3 /* RMResult.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -301,7 +298,6 @@
 				2C78EE722923D8550093A80E /* RMCharacterTableViewCell.swift in Sources */,
 				2C78EE702923D8550093A80E /* RMCharacterListViewController.swift in Sources */,
 				2C78EE6D2923D8550093A80E /* RMCharctersListViewModel.swift in Sources */,
-				2CEAE0B72921B96D00E0EDD3 /* RMResult.swift in Sources */,
 				2C78EE782923EA0C0093A80E /* HTTPRequest.swift in Sources */,
 				2C78EE6F2923D8550093A80E /* RMCharacterDetailsViewController.swift in Sources */,
 				2CEAE065292167A800E0EDD3 /* SceneDelegate.swift in Sources */,
