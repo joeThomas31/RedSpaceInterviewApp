@@ -17,38 +17,18 @@ struct RMCharacter: Codable, Equatable {
     let name: String
     let status: String
     let species: String
-    let type: String
+  //  let type: String
     let gender: String
-    let origin: RMLocation
+        //let origin: RMLocation
     let location: RMLocation
     let image: String
     let episode: [String]
-    let url: String
-    let created: String
+//    let url: String
+//    let created: String
     
-    enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case status
-        case species
-        case type
-        case gender
-        case origin
-        case location
-        case image
-        case episode
-        case url
-        case created
-    }
+ 
 }
 
 struct RMLocation: Codable {
-    let url: String
     let name: String
-    enum CodingKeys: String, CodingKey {
-        case url
-        case name
-
-        
-    }
 }

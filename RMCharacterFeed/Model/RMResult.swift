@@ -9,28 +9,28 @@ import Foundation
 
 struct RMResult: Codable, Equatable {
     static func == (lhs: RMResult, rhs: RMResult) -> Bool {
-        return lhs.info == rhs.info && lhs.results == rhs.results
+        return lhs.results == rhs.results
     }
     
-    let info: RMInfo
+//    let info: RMInfo
     let results: [RMCharacter]
 
-    enum CodingKeys: String, CodingKey {
-        case info
-        case results
-    }
+//    enum CodingKeys: String, CodingKey {
+//        case info
+//        case results
+//    }
 }
 
-struct RMInfo: Codable, Equatable {
-    let count: Int
-    let pages: Int
-    let next: String?
-    let prev: String?
-
-    enum CodingKeys: String, CodingKey {
-        case count
-        case pages
-        case next
-        case prev
-    }
-}
+//struct RMInfo: Codable, Equatable {
+//    let count: Int
+//    let pages: Int
+//    let next: String?
+//    let prev: String?
+//
+//    enum CodingKeys: String, CodingKey {
+//        case count
+//        case pages
+//        case next
+//        case prev
+//    }
+//}

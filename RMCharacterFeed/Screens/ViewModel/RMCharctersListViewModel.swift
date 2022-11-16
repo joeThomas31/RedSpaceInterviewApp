@@ -59,16 +59,16 @@ class RMCharctersListViewModel: NSObject {
     }
     
     func createCellModel(rmCharacter: RMCharacter) -> RMCharacterCellViewModel {
-        let episode = rmCharacter.episode
+        let episode = rmCharacter.episode 
         let name = rmCharacter.name
         let image = rmCharacter.image
         var imagePhoto = UIImage(systemName: "person.and.background.dotted")!
-        if let data = try? Data(contentsOf: URL(string: image)!) {
+        if let data = try? Data(contentsOf: URL(string: image )!) {
             if let image = UIImage(data: data) {
                  imagePhoto = image
             }
         }
-        return RMCharacterCellViewModel(episode: episode, name: name, image: image, imagePhoto: imagePhoto)
+        return RMCharacterCellViewModel(episode: episode, name: name , image: image , imagePhoto: imagePhoto)
     }
     
     func getCellViewModel(at indexPath: IndexPath) -> RMCharacterCellViewModel {
@@ -84,16 +84,19 @@ class RMCharctersListViewModel: NSObject {
         let image = rmCharacter.image
         let status = rmCharacter.status
         let species = rmCharacter.species
-        let type = rmCharacter.type
+      //  let type = rmCharacter.type
         let gender = rmCharacter.gender
         let location = rmCharacter.location
         var imagePhoto = UIImage(systemName: "person.and.background.dotted")!
-        if let data = try? Data(contentsOf: URL(string: image)!) {
+        if let data = try? Data(contentsOf: URL(string: image )!) {
             if let image = UIImage(data: data) {
                  imagePhoto = image
             }
         }
-        return RMCharcaterDetailsViewModel(name: name, image: image, status: status, species: species, type: type, gender: gender, location: location.name, imagePhoto: imagePhoto)
+        
+        return RMCharcaterDetailsViewModel(name: name, image: image, status: status, species: species, gender: gender, location: location.name, imagePhoto: imagePhoto)
+        
+
     }
     
     func getDetailsViewModel(at indexPath: IndexPath) -> RMCharcaterDetailsViewModel {

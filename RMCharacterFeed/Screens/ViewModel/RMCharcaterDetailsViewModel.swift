@@ -12,7 +12,7 @@ struct RMCharcaterDetailsViewModel {
     var image: String
     var status: String
     var species: String
-    var type: String
+//    var type: String
     var gender: String
     var location: String
     var imagePhoto: UIImage
