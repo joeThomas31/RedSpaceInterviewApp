@@ -59,18 +59,57 @@ final class RMCharacterFeedTests: XCTestCase {
         })
     }
     
+    func test_load_deliversInvalidDataErrorOn200HTTPResponseWithPartiallyValidJSONItems() {
+        let (sut, client) = makeSUT()
+
+        let validItem = makeItem(id: 1, name: "gsg", status: "hbs", species: "shbj", gender: "jsn", location: RMLocation(name: "djb"), image: "djn", episode: []).json
+
+        let invalidItem = ["invalid": "item"]
+
+        let items = [validItem, invalidItem]
+        let json = makeItemsJSON(items)
+        
+        
+        expect(sut, toCompleteWith: .failure(.invalidData), when: {
+            let json = makeItemsJSON(items)
+            client.complete(withStatusCode: 200, data: json)
+        })
+    }
+
+    
     
     
     // MARK: - Helpers
-    private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
+    private func makeItemsJSON(_ items: [[String: Any]]) -> Data  {
         let json = ["results": items]
+        guard JSONSerialization.isValidJSONObject(json) else {
+            fatalError("Invalid json object")
+        }
         return try! JSONSerialization.data(withJSONObject: json)
     }
+    
     
     private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedLoader, client: HTTPClientSpy) {
         let client = HTTPClientSpy()
         let sut = RemoteFeedLoader(url: url, client: client)
         return (sut, client)
+    }
+    
+    private func makeItem(id: Int, name: String, status: String, species: String, gender: String, location: RMLocation, image: String, episode: [String]) -> (model: RMCharacter, json: [String: Any]) {
+        let item = RMCharacter(id: id, name: name, status: status, species: species, gender: gender, location: RMLocation(name: location.name), image: image, episode: episode)
+
+        let json = [
+            "id": id,
+            "name": name,
+            "status": status,
+            "species": species,
+            "gender": gender,
+            "location": location.name,
+            "image": image,
+            "episode": episode
+        ].compactMapValues { $0 }
+
+        return (item, json)
     }
     
     func expect(_ sut: RemoteFeedLoader, toCompleteWith expectedResult: Result<[RMResult], RemoteFeedLoader.Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
@@ -122,9 +161,9 @@ class RemoteFeedLoader
                 return
             }
             switch result {
-            case let .success((x, _)):
-                if x == nil {
-                    print("To Do")
+            case let .success((data, response)):
+                if let items = try? FeedItemsMapper.map(data, response) {
+                    completion(.success(items))
                 } else {
                     completion(Result.failure(Error.invalidData))
                 }
@@ -137,6 +176,22 @@ class RemoteFeedLoader
     }
     
     
+}
+
+private class FeedItemsMapper {
+    static var OK_200: Int { return 200 }
+
+    private struct Root: Decodable {
+        let results: [RMCharacter]
+    }
+
+    static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [RMCharacter] {
+        guard response.statusCode == OK_200 else {
+            throw RemoteFeedLoader.Error.invalidData
+        }
+        let root = try JSONDecoder().decode(Root.self, from: data)
+        return root.results.map { $0 }
+    }
 }
 
 public protocol HTTPClient {
