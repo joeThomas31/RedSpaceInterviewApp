@@ -37,8 +37,27 @@ final class RMCharacterFeedTests: XCTestCase {
         })
     }
     
+    func test_load_deliversInvalidDataErrorOnNon200HTTPResponse() {
+        let (sut, client) = makeSUT()
+
+        let samples = [199, 201, 300, 400, 500]
+
+        samples.enumerated().forEach { index, code in
+            expect(sut, toCompleteWith: .failure(.invalidData), when: {
+                let json = makeItemsJSON([])
+                client.complete(withStatusCode: code, data: json, at: index)
+            })
+        }
+    }
+    
+    
     
     // MARK: - Helpers
+    private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
+        let json = ["results": items]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+    
     private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedLoader, client: HTTPClientSpy) {
         let client = HTTPClientSpy()
         let sut = RemoteFeedLoader(url: url, client: client)
@@ -93,7 +112,18 @@ class RemoteFeedLoader
             guard self != nil else {
                 return
             }
-            completion(.failure(.connectivity))
+            switch result {
+            case let .success((data, response)):
+                if 2 == 3 {
+                    print("To Do")
+                } else {
+                    completion(Result.failure(Error.invalidData))
+                }
+
+            case .failure(_):
+                completion(Result.failure(Error.connectivity))
+            }
+
         }
     }
     
@@ -126,4 +156,20 @@ class HTTPClientSpy: HTTPClient {
 
         messages[index].completion(.failure(error))
     }
+    
+    func complete(withStatusCode code: Int, data: Data, at index: Int = 0, file: StaticString = #filePath, line: UInt = #line) {
+        guard requestedURLs.count > index else {
+            return XCTFail("Can't complete request never made", file: file, line: line)
+        }
+
+        let response = HTTPURLResponse(
+            url: requestedURLs[index],
+            statusCode: code,
+            httpVersion: nil,
+            headerFields: nil
+        )!
+
+        messages[index].completion(.success((data, response)))
+    }
+
 }
