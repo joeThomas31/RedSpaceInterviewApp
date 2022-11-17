@@ -20,7 +20,7 @@ struct RMCharacter: Codable, Equatable {
     let status: String
     let species: String
     let gender: String
-    let location: RMLocation
+    let location: [String:String]
     let image: String
     let episode: [String]
     

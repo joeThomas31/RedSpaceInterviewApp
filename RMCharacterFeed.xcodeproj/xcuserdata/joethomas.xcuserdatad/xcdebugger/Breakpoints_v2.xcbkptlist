@@ -3,4 +3,70 @@
    uuid = "14523713-AA2E-4B1D-98C3-804875379D58"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "983097CD-52CF-4E93-8DD4-6C4656853B0A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RMCharacterFeedTests/RMCharacterFeedTests.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "test_load_deliversSuccessWithItemsOn200HTTPResponseWithJSONItems()"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "983097CD-52CF-4E93-8DD4-6C4656853B0A - c23a392cd86945bf"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RMCharacterFeedTests.RMCharacterFeedTests.test_load_deliversSuccessWithItemsOn200HTTPResponseWithJSONItems() -&gt; ()"
+                  moduleName = "RMCharacterFeedTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/joethomas/Desktop/RMCharacterFeed/RedSpaceInterviewApp/RMCharacterFeedTests/RMCharacterFeedTests.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "93"
+                  endingLineNumber = "93"
+                  offsetFromSymbolStart = "2217">
+               </Location>
+               <Location
+                  uuid = "983097CD-52CF-4E93-8DD4-6C4656853B0A - c23a392cd86945bf"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RMCharacterFeedTests.RMCharacterFeedTests.test_load_deliversSuccessWithItemsOn200HTTPResponseWithJSONItems() -&gt; ()"
+                  moduleName = "RMCharacterFeedTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/joethomas/Desktop/RMCharacterFeed/RedSpaceInterviewApp/RMCharacterFeedTests/RMCharacterFeedTests.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "93"
+                  endingLineNumber = "93"
+                  offsetFromSymbolStart = "2160">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3D3287F0-3C1B-4953-8EE0-0715D02CA9F6"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RMCharacterFeedTests/RMCharacterFeedTests.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "212"
+            endingLineNumber = "212"
+            landmarkName = "map(_:_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

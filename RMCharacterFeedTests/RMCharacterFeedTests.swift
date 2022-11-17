@@ -62,8 +62,7 @@ final class RMCharacterFeedTests: XCTestCase {
     func test_load_deliversInvalidDataErrorOn200HTTPResponseWithPartiallyValidJSONItems() {
         let (sut, client) = makeSUT()
 
-        let validItem = makeItem(id: 1, name: "gsg", status: "hbs", species: "shbj", gender: "jsn", location: RMLocation(name: "djb"), image: "djn", episode: []).json
-
+        let validItem = makeItem(id: 1, name: "gsg", status: "hbs", species: "shbj", gender: "jsn", location: ["name":"WonderLand"], image: "djn", episode: []).json
         let invalidItem = ["invalid": "item"]
 
         let items = [validItem, invalidItem]
@@ -76,7 +75,28 @@ final class RMCharacterFeedTests: XCTestCase {
         })
     }
 
+    func test_load_deliversSuccessWithNoItemsOn200HTTPResponseWithEmptyJSONList() {
+        let (sut, client) = makeSUT()
+
+        expect(sut, toCompleteWith: .success([]), when: {
+            let emptyListJSON = makeItemsJSON([])
+            client.complete(withStatusCode: 200, data: emptyListJSON)
+        })
+    }
     
+    func test_load_deliversSuccessWithItemsOn200HTTPResponseWithJSONItems() {
+        let (sut, client) = makeSUT()
+
+        let validItem1 = makeItem(id: 1, name: "gsg", status: "hbs", species: "shbj", gender: "jsn", location: ["name":"WonderLand"], image: "djn", episode: [])
+        let validItem2 = makeItem(id: 2, name: "gsg", status: "hbs", species: "shbj", gender: "jsn", location: ["name":"WonderLand"], image: "djn", episode: [])
+
+        let items = [validItem1.model, validItem2.model]
+
+        expect(sut, toCompleteWith: .success(items), when: {
+            let json = makeItemsJSON([validItem1.json, validItem2.json])
+            client.complete(withStatusCode: 200, data: json)
+        })
+    }
     
     
     // MARK: - Helpers
@@ -95,8 +115,8 @@ final class RMCharacterFeedTests: XCTestCase {
         return (sut, client)
     }
     
-    private func makeItem(id: Int, name: String, status: String, species: String, gender: String, location: RMLocation, image: String, episode: [String]) -> (model: RMCharacter, json: [String: Any]) {
-        let item = RMCharacter(id: id, name: name, status: status, species: species, gender: gender, location: RMLocation(name: location.name), image: image, episode: episode)
+    private func makeItem(id: Int, name: String, status: String, species: String, gender: String, location: [String:String], image: String, episode: [String]) -> (model: RMCharacter, json: [String: Any]) {
+        let item = RMCharacter(id: id, name: name, status: status, species: species, gender: gender, location: location, image: image, episode: episode)
 
         let json = [
             "id": id,
@@ -104,7 +124,7 @@ final class RMCharacterFeedTests: XCTestCase {
             "status": status,
             "species": species,
             "gender": gender,
-            "location": location.name,
+            "location": location,
             "image": image,
             "episode": episode
         ].compactMapValues { $0 }
@@ -112,13 +132,13 @@ final class RMCharacterFeedTests: XCTestCase {
         return (item, json)
     }
     
-    func expect(_ sut: RemoteFeedLoader, toCompleteWith expectedResult: Result<[RMResult], RemoteFeedLoader.Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expect(_ sut: RemoteFeedLoader, toCompleteWith expectedResult: Result<[RMCharacter], RemoteFeedLoader.Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for load completion")
 
         sut.load { receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.success(receivedItems), .success(expectedItems)):
-                XCTAssertEqual(receivedItems as! [RMResult], expectedItems, file: file, line: line)
+                XCTAssertEqual(receivedItems as! [RMCharacter], expectedItems, file: file, line: line)
 
             case let (.failure(receivedError), .failure(expectedError)):
                 XCTAssertEqual(receivedError, expectedError, file: file, line: line)
@@ -190,7 +210,8 @@ private class FeedItemsMapper {
             throw RemoteFeedLoader.Error.invalidData
         }
         let root = try JSONDecoder().decode(Root.self, from: data)
-        return root.results.map { $0 }
+        
+        return root.results
     }
 }
 
